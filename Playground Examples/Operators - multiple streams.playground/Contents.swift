@@ -49,3 +49,30 @@ example("Zip") {
         .sink { print($0) } // <- will print new paired streams, if it has a pair
 }
 
+// MARK: - Combine latest will give a accumulateed value that is current in time, so whenever the value changes it wil combine latest values to produce new current latest value
+/*
+ Usualyy works well with states of the UI elements aka text fields empty or not ex. So combine latest can look if any state has been changed
+ */
+example("Combine Latest") {
+    let pub1 = CurrentValueSubject<Bool, Never>(false)
+    let pub2 = CurrentValueSubject<Bool, Never>(false)
+    let pub3 = CurrentValueSubject<Bool, Never>(false)
+    
+    pub1.send(true)
+    
+    Publishers.CombineLatest3(pub1, pub2, pub3)
+        .print()
+        .map { switches in
+            switches.0 && switches.1 && switches.2
+        }
+        .filter { $0 }
+        .sink { _ in print("Now rocket will fly") }
+    
+    print("pub2 recieved a new value")
+    pub2.send(true)
+    
+    print("pub3 received a new value")
+    print("See how pub3 emmits a production of a new current state value which is going next, same as pub2 in previous states")
+    pub3.send(true)
+}
+
