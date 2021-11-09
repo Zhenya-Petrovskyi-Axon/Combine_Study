@@ -60,14 +60,22 @@
 			children = (
 				EE29B6DA273A97700087B3EA /* AppDelegate.swift */,
 				EE29B6DC273A97700087B3EA /* SceneDelegate.swift */,
-				EE29B6DE273A97700087B3EA /* ViewController.swift */,
+				EE29B6F0273B05080087B3EA /* SignUpModule */,
 				EE29B6E0273A97700087B3EA /* Main.storyboard */,
 				EE29B6E3273A97720087B3EA /* Assets.xcassets */,
 				EE29B6E5273A97720087B3EA /* LaunchScreen.storyboard */,
 				EE29B6E8273A97720087B3EA /* Info.plist */,
-				EE29B6EE273AFC830087B3EA /* SignInViewModel.swift */,
 			);
 			path = SignUpValidationCombine;
+			sourceTree = "<group>";
+		};
+		EE29B6F0273B05080087B3EA /* SignUpModule */ = {
+			isa = PBXGroup;
+			children = (
+				EE29B6DE273A97700087B3EA /* ViewController.swift */,
+				EE29B6EE273AFC830087B3EA /* SignInViewModel.swift */,
+			);
+			path = SignUpModule;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

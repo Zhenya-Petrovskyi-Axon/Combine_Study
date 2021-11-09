@@ -5,16 +5,6 @@
 //  Created by Ievgen Petrovskiy on 09.11.2021.
 //
 
-/*
- Sign Up form Rules
- - email adress must be valid (contain @ and .)
- - password must be at least 8 characters
- - password can not be "password"
- BONUS
- - color email field red when invalid, password confirmation field red when it doesen't match the original password
- - email adress must remove spaces, lowercased
- */
-
 enum TextFieldTags: Int {
     case email
     case password
