@@ -58,7 +58,8 @@ class ViewController: UIViewController {
     }()
     
     private lazy var signupButton: UIButton = {
-        var configuration: UIButton.Configuration = .gray() // 1
+        var configuration: UIButton.Configuration = .filled()
+        configuration.cornerStyle = .capsule
         configuration.cornerStyle = .capsule // 2
         configuration.baseForegroundColor = UIColor.systemPink
         configuration.buttonSize = .large
@@ -95,12 +96,15 @@ class ViewController: UIViewController {
         return view
     }()
     
-    // MARK: - Subjects
-    /// We will have subjects that allready have a value, instead of pass through to waur untill some event will happen
-    private var emailSubject = CurrentValueSubject<String, Never>("")
-    private var passwordSubject = CurrentValueSubject<String, Never>("")
-    private var confirmSubject = CurrentValueSubject<String, Never>("")
-    private var agreementSubject = CurrentValueSubject<Bool, Never>(false)
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView(style: .large)
+        view.center = self.view.center
+        view.hidesWhenStopped = true
+        view.stopAnimating()
+        return view
+    }()
+    
+    let viewModel = SignInViewModel()
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -112,94 +116,42 @@ class ViewController: UIViewController {
     }
     
     private func setUpPublisherCompletions() {
-        formIsValid
+        viewModel.formIsValid
             .assign(to: \.isEnabled, on: self.signupButton)
             .store(in: &cancellables)
         
-        setValidBorder(emailField, publisher: isEmailValid)
-        setValidBorder(passwordField, publisher: isPasswordValid)
-        setValidBorder(confirmPasswordField, publisher: isPasswordConfirmed)
-        
-        formattedEmailAdress
+        viewModel.formattedEmailAdress
             .map { $0 as String? } // <-- we need to cast it as textfield takes only optional Strings
             .assign(to: \.text, on: emailField)
             .store(in: &cancellables)
-    }
-    
-    func setValidBorder<P: Publisher>(_ textField: UITextField, publisher: P) where P.Output == Bool, P.Failure == Never {
-        publisher
-            .map { $0 ? UIColor.label : UIColor.systemRed }
-            .assign(to: \.textColor, on: textField)
-            .store(in: &cancellables)
-    }
-    
-    private func emailIsValid(_ email: String) -> Bool {
-        email.contains("@") && email.contains(".")
-    }
-    
-    // MARK: - Publishers
-    private var formIsValid: AnyPublisher<Bool, Never> {
-        Publishers.CombineLatest3(isEmailValid, passIsValidAndConfirmed, agreementSubject)
-            .map { emailValid, passConfirmed, termsAgreed in
-                emailValid && passConfirmed && termsAgreed
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    private var isEmailValid: AnyPublisher<Bool, Never> {
-        formattedEmailAdress
-            .map { [weak self] in self?.emailIsValid($0) }
-            .replaceNil(with: false)
-            .eraseToAnyPublisher()
-    }
-    
-    private var formattedEmailAdress: AnyPublisher<String, Never> {
-        emailSubject
-            .map { $0.lowercased() }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .eraseToAnyPublisher()
-    }
-    
-    private var isPasswordValid: AnyPublisher<Bool, Never> {
-        passwordSubject
-            .map { $0 != "password" && $0.count >= 8 }
-            .eraseToAnyPublisher()
-    }
-    
-    private var isPasswordConfirmed: AnyPublisher<Bool, Never> {
-        passwordSubject.combineLatest(confirmSubject)
-            .map { pass, confirmPass in
-                pass == confirmPass
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    private var passIsValidAndConfirmed: AnyPublisher<Bool, Never> {
-        isPasswordValid.combineLatest(isPasswordConfirmed)
-            .map { valid, confirmed in
-                valid && confirmed
-            }
-            .eraseToAnyPublisher()
+        
+        setValidBorder(emailField, publisher: viewModel.isEmailValid)
+        setValidBorder(passwordField, publisher: viewModel.isPasswordValid)
+        setValidBorder(confirmPasswordField, publisher: viewModel.isPasswordConfirmed)
     }
     
     // MARK: - Text field actions
     private func emailDidChanged() {
         guard let text = emailField.text else { return }
-        emailSubject.send(text)
+        viewModel.emailSubject.send(text)
     }
     
     private func passwordDidChanged() {
         guard let pass = passwordField.text else { return }
-        passwordSubject.send(pass)
+        viewModel.passwordSubject.send(pass)
     }
     
     private func confirmPasswordDidChanged() {
         guard let confirmPass = confirmPasswordField.text else { return }
-        confirmSubject.send(confirmPass)
+        viewModel.confirmSubject.send(confirmPass)
     }
     
     private func setUpView() {
+        [fieldsStackView, activityIndicator].forEach {
+            view.addSubview($0)
+        }
         view.addSubview(fieldsStackView)
+        view.addSubview(activityIndicator)
         [agreementLabel, termsAgreementSwitcher].forEach {
             agreementStackView.addArrangedSubview($0)
         }
@@ -218,15 +170,25 @@ class ViewController: UIViewController {
         ])
         view.layoutIfNeeded()
     }
+    
+    func setValidBorder<P: Publisher>(_ textField: UITextField, publisher: P) where P.Output == Bool, P.Failure == Never {
+        publisher
+            .map { $0 ? UIColor.label : UIColor.systemRed }
+            .assign(to: \.textColor, on: textField)
+            .store(in: &cancellables)
+    }
 }
 
 extension ViewController {
     @objc func didTapSignInButton(_ sender: UIButton) {
-        print("Tap")
+        activityIndicator.startAnimating()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            self?.activityIndicator.stopAnimating()
+        }
     }
     
     @objc func didChangeSwitch(_ sender: UISwitch) {
-        agreementSubject.send(sender.isOn)
+        viewModel.agreementSubject.send(sender.isOn)
     }
 }
 
