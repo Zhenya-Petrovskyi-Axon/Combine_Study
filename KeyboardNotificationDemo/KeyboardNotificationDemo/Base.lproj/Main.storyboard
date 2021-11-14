@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="5K3-K1-Y31">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="uBn-u8-EKc">
+            <objects>
+                <viewController id="5K3-K1-Y31" customClass="ViewController" customModule="NotificationDeom" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="soC-lp-Obf">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZQc-bf-cRQ" userLabel="Chat Bar">
+                                <rect key="frame" x="0.0" y="796" width="414" height="100"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="93k-ix-oPM">
+                                        <rect key="frame" x="20" y="8" width="374" height="48"/>
+                                        <subviews>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PBs-Az-Peq">
+                                                <rect key="frame" x="0.0" y="0.0" width="318" height="48"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="48" id="cBs-2v-Za2"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="26V-Fz-Eo9">
+                                                <rect key="frame" x="338" y="9" width="36" height="30"/>
+                                                <state key="normal" title="Send"/>
+                                                <connections>
+                                                    <action selector="sendTapped:" destination="5K3-K1-Y31" eventType="touchUpInside" id="2b0-D4-eEW"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="93k-ix-oPM" firstAttribute="leading" secondItem="ZQc-bf-cRQ" secondAttribute="leading" constant="20" id="8dc-6y-EFX"/>
+                                    <constraint firstAttribute="height" priority="999" constant="64" id="LH1-6w-QDf"/>
+                                    <constraint firstAttribute="trailing" secondItem="93k-ix-oPM" secondAttribute="trailing" constant="20" id="bqm-K1-vZZ"/>
+                                    <constraint firstItem="93k-ix-oPM" firstAttribute="top" secondItem="ZQc-bf-cRQ" secondAttribute="top" constant="8" id="gu0-CT-oY1"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="SlV-9o-zqS"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="ZQc-bf-cRQ" secondAttribute="bottom" id="Jmg-ds-e2y"/>
+                            <constraint firstItem="93k-ix-oPM" firstAttribute="bottom" secondItem="SlV-9o-zqS" secondAttribute="bottom" constant="-10" id="Kau-Nw-UAp"/>
+                            <constraint firstItem="ZQc-bf-cRQ" firstAttribute="leading" secondItem="SlV-9o-zqS" secondAttribute="leading" id="fK7-cP-d2N"/>
+                            <constraint firstItem="ZQc-bf-cRQ" firstAttribute="trailing" secondItem="SlV-9o-zqS" secondAttribute="trailing" id="lk7-q0-UN2"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="chatBar" destination="ZQc-bf-cRQ" id="8x3-KN-D7w"/>
+                        <outlet property="safeAreaConstraint" destination="Kau-Nw-UAp" id="eMz-ck-qvt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HT7-Nt-Jvv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="30" y="84"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="secondarySystemBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
